@@ -1,0 +1,44 @@
+# Sample deployment with Ansible
+- name: Copy prom2mqtt service
+  copy:
+    src: etc/systemd/system/prom2mqtt.service
+    dest: /etc/systemd/system
+
+- name: Copy prom2mqtt source
+  ansible.builtin.git:
+    repo: https://github.com/anroots/prom2mqtt.git
+    dest: /opt/prom2mqtt
+
+- name: Change prom2mqtt ownership
+  file:
+    path: "/opt/prom2mqtt"
+    owner: "openhabian"
+    group: "openhabian"
+    recurse: yes
+
+- name: Make prom2mqtt conf dir
+  file:
+    path: /etc/prom2mqtt
+    state: directory
+
+- name: Copy prom2mqtt config
+  ansible.builtin.template:
+    src: etc/prom2mqtt/prom2mqtt.yml
+    dest: /etc/prom2mqtt/
+    owner: openhabian
+    group: openhabian
+    mode: "0660"
+
+- name: Install prom2mqtt deps
+  ansible.builtin.pip:
+    chdir: /opt/prom2mqtt
+    requirements: requirements.txt
+    executable: /usr/bin/pip3
+
+- name: Start prom2mqtt service
+  service:
+    name: prom2mqtt
+    state: started
+    daemon-reload: yes
+    enabled: yes
+

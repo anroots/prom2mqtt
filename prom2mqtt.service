@@ -1,0 +1,14 @@
+[Unit]
+Description=prom2mqtt
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 prom2mqtt.py
+WorkingDirectory=/opt/prom2mqtt
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=openhabian
+
+[Install]
+WantedBy=multi-user.target

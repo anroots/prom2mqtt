@@ -1,0 +1,10 @@
+version: "3.7"
+services:
+  mqtt:
+    network_mode: host
+    image: eclipse-mosquitto
+    volumes:
+      - source: $PWD/mosquitto.conf
+        target: /mosquitto/config/mosquitto.conf
+        type: bind
+        read_only: true

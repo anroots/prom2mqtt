@@ -1,0 +1,35 @@
+# prom2mqtt sample config file
+# https://github.com/anroots/prom2mqtt
+
+# MQTT connection config
+mqtt:
+  host: localhost
+  port: 1883
+  client-id: prom2mqtt
+  #username: user
+  #password: password
+
+# Prometheus connection config
+prom:
+  host: localhost
+  ca-path: /etc/ssl/certs/ca-certificates.crt
+  protocol: https
+
+prom2mqtt:
+  # How long to sleep between queries
+  sleep: 60
+
+  # List of Prometheus queries to run. Results of these will be sent to MQTT
+  queries:
+      # Prometheus query to run
+    - query: unifipoller_client_uptime_seconds{name="nightwish"}
+
+      # MQTT topic where result will be sent to
+      topic: prom2mqtt/wifi/uptime/nightwish
+
+      # Value to send to MQTT if query yields 0 results
+      noresultsval: 0
+
+    - query: unifipoller_client_uptime_seconds{name="Nebula"}
+      topic: prom2mqtt/wifi/uptime/nebula
+      noresultsval: 0
